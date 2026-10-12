@@ -2,120 +2,455 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ARreeloo Privacy Policy</title>
 <meta name="description" content="How the ARreeloo app handles your videos, photos, voice and purchases.">
+<meta name="theme-color" content="#0A0A12">
+<meta name="color-scheme" content="dark">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
 <style>
+  /* The same colours, radii and spacing as the app's AppColors,
+     AppRadius and AppSpacing. The app is always dark, so this is too. */
   :root {
-    --bg: #ffffff;
-    --text: #1c1c1e;
-    --muted: #5f6368;
-    --line: #e3e3e8;
-    --card: #f5f5f7;
-    --link: #0a58ca;
+    --background: #0A0A12;
+    --violet: #7C5CFF;
+    --pink: #FF3D8B;
+    --cyan: #2EE6D6;
+    --text: #FFFFFF;
+    --text-secondary: rgba(255, 255, 255, 0.78);
+    --text-muted: rgba(255, 255, 255, 0.55);
+    --glass: rgba(0, 0, 0, 0.35);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --brand: linear-gradient(135deg, var(--violet), var(--pink));
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    color-scheme: dark;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #111113;
-      --text: #f2f2f7;
-      --muted: #a1a1aa;
-      --line: #2c2c30;
-      --card: #1c1c1f;
-      --link: #7ab4ff;
-    }
-  }
+
   * { box-sizing: border-box; }
+
+  html { background: var(--background); }
+
   body {
     margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+    color: var(--text-secondary);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: 100%;
   }
+
+  /* The app's MagicBackground: aurora light in the brand colours over
+     deep night, with sparkles drawn on the canvas above it. */
+  .aurora, #sparkles {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .aurora { overflow: hidden; opacity: 0.8; }
+
+  .aurora i {
+    position: absolute;
+    width: 120vmax;
+    height: 120vmax;
+    margin: -60vmax 0 0 -60vmax;
+    border-radius: 50%;
+    animation: drift 24s ease-in-out infinite alternate;
+  }
+
+  .aurora i:nth-child(1) {
+    left: 15%; top: 18%;
+    background: radial-gradient(closest-side, rgba(124, 92, 255, 0.42), rgba(124, 92, 255, 0));
+  }
+  .aurora i:nth-child(2) {
+    left: 90%; top: 42%;
+    background: radial-gradient(closest-side, rgba(255, 61, 139, 0.36), rgba(255, 61, 139, 0));
+    animation-direction: alternate-reverse;
+  }
+  .aurora i:nth-child(3) {
+    left: 30%; top: 90%;
+    background: radial-gradient(closest-side, rgba(46, 230, 214, 0.3), rgba(46, 230, 214, 0));
+    animation-duration: 16s;
+  }
+
+  @keyframes drift {
+    from { transform: translate(-6vw, -4vh); }
+    to   { transform: translate(6vw, 4vh); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aurora i { animation: none; }
+  }
+
   main {
-    max-width: 720px;
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
     margin: 0 auto;
-    padding: 48px 20px 72px;
+    padding: 56px max(16px, env(safe-area-inset-right)) 72px max(16px, env(safe-area-inset-left));
   }
-  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 4px; }
-  h2 { font-size: 1.25rem; line-height: 1.3; margin: 40px 0 8px; }
-  p, ul { margin: 0 0 14px; }
-  ul { padding-left: 22px; }
-  li { margin-bottom: 6px; }
-  a { color: var(--link); }
-  .date { color: var(--muted); margin-bottom: 28px; }
-  .summary {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 18px 20px;
+
+  header { text-align: center; margin-bottom: 32px; }
+
+  .icon {
+    width: 96px;
+    height: 96px;
+    border-radius: 22px;
+    box-shadow: 0 12px 40px rgba(255, 61, 139, 0.35), 0 4px 18px rgba(124, 92, 255, 0.35);
   }
-  .summary p:last-child { margin-bottom: 0; }
+
+  .app {
+    margin: 16px 0 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 6px 0 8px;
+    font-size: clamp(2rem, 7vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.4px;
+    text-wrap: balance;
+  }
+
+  /* Headline in the brand gradient, as on the onboarding screens. */
+  .gradient {
+    background: var(--brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 22px rgba(124, 92, 255, 0.45));
+  }
+
+  .date { margin: 0; color: var(--text-muted); font-size: 14px; font-weight: 600; }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin: 24px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* PillChip */
+  .chips li {
+    padding: 7px 14px;
+    border: 1px solid var(--glass-border);
+    border-radius: 999px;
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  /* GlassContainer */
+  section {
+    margin-top: 16px;
+    padding: 24px;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+  }
+
+  section.lead {
+    border-color: transparent;
+    background:
+      linear-gradient(rgba(16, 14, 28, 0.82), rgba(16, 14, 28, 0.82)) padding-box,
+      var(--brand) border-box;
+    box-shadow: 0 8px 32px rgba(255, 61, 139, 0.18);
+  }
+
+  section.lead p { color: var(--text); font-size: 17px; }
+
+  h2 {
+    margin: 0 0 8px;
+    color: var(--text);
+    font-size: 1.2rem;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -0.3px;
+  }
+
+  p { margin: 0 0 12px; }
+  section > :last-child { margin-bottom: 0; }
+
+  strong { color: var(--text); font-weight: 700; }
+
+  a {
+    color: var(--cyan);
+    font-weight: 700;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 4px; }
+
+  ul.plain { margin: 0 0 12px; padding-left: 20px; }
+  ul.plain li { margin-bottom: 4px; }
+  ul.plain li::marker { color: var(--pink); }
+
+  /* What the app uses: a gradient badge per permission, like the
+     highlighted RailButton. */
+  .uses { margin: 16px 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+
+  .uses li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .badge {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--brand);
+  }
+
+  .badge svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: #fff;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .uses b { display: block; color: var(--text); font-weight: 800; }
+
+  /* GradientButton */
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 54px;
+    margin-top: 4px;
+    padding: 0 28px;
+    border-radius: 999px;
+    background: var(--brand);
+    box-shadow: 0 8px 24px rgba(255, 61, 139, 0.4);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.1px;
+    text-decoration: none;
+  }
+  .button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 999px; }
+
   footer {
-    margin-top: 48px;
-    padding-top: 20px;
-    border-top: 1px solid var(--line);
-    color: var(--muted);
-    font-size: 0.9rem;
+    margin-top: 40px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    main { padding-top: 40px; }
+    section { padding: 20px 18px; }
+    .button { display: flex; }
   }
 </style>
 </head>
 <body>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<canvas id="sparkles" aria-hidden="true"></canvas>
+
 <main>
-  <h1>ARreeloo Privacy Policy</h1>
-  <p class="date">Effective 13 October 2026</p>
+  <header>
+    <img class="icon" src="icon.png" alt="ARreeloo app icon" width="96" height="96">
+    <p class="app">ARreeloo</p>
+    <h1><span class="gradient">Privacy Policy</span></h1>
+    <p class="date">Effective 13 October 2026</p>
+    <ul class="chips" aria-label="At a glance">
+      <li>On your device</li>
+      <li>No accounts</li>
+      <li>No ads</li>
+      <li>No tracking</li>
+    </ul>
+  </header>
 
-  <div class="summary">
+  <section class="lead">
     <p><strong>The short version:</strong> ARreeloo does its work on your iPhone or iPad. We do not collect your videos, photos, voice or any personal information. The app has no accounts, no ads, no analytics and no tracking.</p>
-  </div>
+  </section>
 
-  <h2>Who we are</h2>
-  <p>ARreeloo is an app for recording and editing videos, made by Chandrashekhar N H ("we", "us"). This policy explains what happens to your information when you use the app.</p>
+  <section>
+    <h2>Who we are</h2>
+    <p>ARreeloo is an app for recording and editing videos, made by Chandrashekhar N H ("we", "us"). This policy explains what happens to your information when you use the app.</p>
+  </section>
 
-  <h2>Information we collect</h2>
-  <p>None. We do not run servers that receive anything from the app, so we never see or store:</p>
-  <ul>
-    <li>your videos, photos or voice recordings</li>
-    <li>your name, email address or contacts</li>
-    <li>your location</li>
-    <li>device identifiers, usage data or crash reports</li>
-  </ul>
+  <section>
+    <h2>Information we collect</h2>
+    <p>None. We do not run servers that receive anything from the app, so we never see or store:</p>
+    <ul class="plain">
+      <li>your videos, photos or voice recordings</li>
+      <li>your name, email address or contacts</li>
+      <li>your location</li>
+      <li>device identifiers, usage data or crash reports</li>
+    </ul>
+  </section>
 
-  <h2>What the app uses on your device</h2>
-  <p>ARreeloo asks for permission before using each of these, and you can change your choice at any time in Settings.</p>
-  <ul>
-    <li><strong>Camera</strong> – to record your videos and to add live effects to the room around you.</li>
-    <li><strong>Microphone</strong> – so your videos have sound, and to record a voice-over.</li>
-    <li><strong>Photos</strong> – to let you pick videos and photos to edit, and to save your finished videos.</li>
-    <li><strong>Speech recognition</strong> – to turn a voice-over you record into captions.</li>
-  </ul>
-  <p>Everything you record, pick or edit stays on your device. Finished videos are saved to your Photos library, where you decide whether to share them.</p>
+  <section>
+    <h2>What the app uses on your device</h2>
+    <p>ARreeloo asks for permission before using each of these, and you can change your choice at any time in Settings.</p>
+    <ul class="uses">
+      <li>
+        <span class="badge" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="12" height="10" rx="2.5"/><path d="M15 10.5l6-3v9l-6-3z"/></svg></span>
+        <span><b>Camera</b>To record your videos and to add live effects to the room around you.</span>
+      </li>
+      <li>
+        <span class="badge" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></span>
+        <span><b>Microphone</b>So your videos have sound, and to record a voice-over.</span>
+      </li>
+      <li>
+        <span class="badge" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15.5l-5-5L6 20"/></svg></span>
+        <span><b>Photos</b>To let you pick videos and photos to edit, and to save your finished videos.</span>
+      </li>
+      <li>
+        <span class="badge" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M7 11h4M14 11h3M7 15h2M12 15h5"/></svg></span>
+        <span><b>Speech recognition</b>To turn a voice-over you record into captions.</span>
+      </li>
+    </ul>
+    <p>Everything you record, pick or edit stays on your device. Finished videos are saved to your Photos library, where you decide whether to share them.</p>
+  </section>
 
-  <h2>Captions and Apple's speech recognition</h2>
-  <p>Captions are made with Apple's speech recognition. For languages your device can handle on its own, the recording never leaves your device. For other languages, Apple's speech recognition sends the voice-over audio to Apple to be turned into text. That audio goes to Apple, not to us, and is handled under <a href="https://www.apple.com/legal/privacy/">Apple's Privacy Policy</a>. If you do not use captions, nothing is sent.</p>
+  <section>
+    <h2>Captions and Apple's speech recognition</h2>
+    <p>Captions are made with Apple's speech recognition. For languages your device can handle on its own, the recording never leaves your device. For other languages, Apple's speech recognition sends the voice-over audio to Apple to be turned into text. That audio goes to Apple, not to us, and is handled under <a href="https://www.apple.com/legal/privacy/">Apple's Privacy Policy</a>. If you do not use captions, nothing is sent.</p>
+  </section>
 
-  <h2>Purchases</h2>
-  <p>ARreeloo offers an optional one-time purchase that removes the watermark from your videos. The purchase is handled entirely by Apple through the App Store. We never receive your name, payment details or Apple Account information. The app only learns from your device whether the purchase has been made.</p>
+  <section>
+    <h2>Purchases</h2>
+    <p>ARreeloo offers an optional one-time purchase that removes the watermark from your videos. The purchase is handled entirely by Apple through the App Store. We never receive your name, payment details or Apple Account information. The app only learns from your device whether the purchase has been made.</p>
+  </section>
 
-  <h2>Tracking and advertising</h2>
-  <p>ARreeloo does not track you across apps or websites, does not show ads, and does not include any third-party analytics or advertising software.</p>
+  <section>
+    <h2>Tracking and advertising</h2>
+    <p>ARreeloo does not track you across apps or websites, does not show ads, and does not include any third-party analytics or advertising software.</p>
+  </section>
 
-  <h2>Sharing your information</h2>
-  <p>Because we do not collect your information, we have nothing to share or sell, and we do not do either.</p>
+  <section>
+    <h2>Sharing your information</h2>
+    <p>Because we do not collect your information, we have nothing to share or sell, and we do not do either.</p>
+  </section>
 
-  <h2>Deleting your data</h2>
-  <p>Your content lives only on your device. Deleting a video in the app or in Photos removes it, and deleting the app removes everything the app stored.</p>
+  <section>
+    <h2>Deleting your data</h2>
+    <p>Your content lives only on your device. Deleting a video in the app or in Photos removes it, and deleting the app removes everything the app stored.</p>
+  </section>
 
-  <h2>Children</h2>
-  <p>ARreeloo does not collect personal information from anyone, including children.</p>
+  <section>
+    <h2>Children</h2>
+    <p>ARreeloo does not collect personal information from anyone, including children.</p>
+  </section>
 
-  <h2>Changes to this policy</h2>
-  <p>If the app changes in a way that affects your privacy, we will update this page and the effective date above.</p>
+  <section>
+    <h2>Changes to this policy</h2>
+    <p>If the app changes in a way that affects your privacy, we will update this page and the effective date above.</p>
+  </section>
 
-  <h2>Contact</h2>
-  <p>Questions about this policy? <a href="https://github.com/chandrashekharNH/arreeloo-privacy/issues">Open an issue on GitHub</a> and we will reply there.</p>
+  <section>
+    <h2>Contact</h2>
+    <p>Questions about this policy? Open an issue on GitHub and we will reply there.</p>
+    <p><a class="button" href="https://github.com/chandrashekharNH/arreeloo-privacy/issues">Contact us</a></p>
+  </section>
 
   <footer>© 2026 Chandrashekhar N H</footer>
 </main>
+
+<script>
+  // The sparkles from the app's MagicBackground: fixed positions, each
+  // twinkling on its own phase. Reduced-motion readers get a still frame.
+  (function () {
+    var canvas = document.getElementById('sparkles');
+    var context = canvas.getContext('2d');
+    var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var loop = 24000;
+    var width = 0;
+    var height = 0;
+
+    function random(index, channel) {
+      var value = Math.sin(index * 12.9898 + channel * 78.233) * 43758.5453;
+      return value - Math.floor(value);
+    }
+
+    function resize() {
+      var scale = window.devicePixelRatio || 1;
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * scale;
+      canvas.height = height * scale;
+      context.setTransform(scale, 0, 0, scale, 0, 0);
+    }
+
+    function paint(now) {
+      var angle = ((now % loop) / loop) * 2 * Math.PI;
+
+      context.clearRect(0, 0, width, height);
+
+      for (var index = 0; index < 46; index++) {
+        var x = random(index, 1) * width;
+        var y = random(index, 2) * height;
+        var phase = random(index, 3) * 2 * Math.PI;
+        var twinkle = 0.5 + 0.5 * Math.sin(angle * 6 + phase);
+        var radius = 0.6 + 1.6 * random(index, 4) * twinkle;
+
+        context.fillStyle = 'rgba(255,255,255,' + (0.1 + 0.45 * twinkle) + ')';
+        context.beginPath();
+        context.arc(x, y, radius, 0, 2 * Math.PI);
+        context.fill();
+
+        // The brightest few get a soft cross-shaped glint.
+        if (index % 9 === 0 && twinkle > 0.75) {
+          var length = 5 * twinkle;
+          context.strokeStyle = 'rgba(255,255,255,' + 0.4 * twinkle + ')';
+          context.lineWidth = 1;
+          context.lineCap = 'round';
+          context.beginPath();
+          context.moveTo(x - length, y);
+          context.lineTo(x + length, y);
+          context.moveTo(x, y - length);
+          context.lineTo(x, y + length);
+          context.stroke();
+        }
+      }
+
+      if (!still) {
+        requestAnimationFrame(paint);
+      }
+    }
+
+    window.addEventListener('resize', function () {
+      resize();
+      if (still) {
+        paint(0);
+      }
+    });
+
+    resize();
+    paint(0);
+  })();
+</script>
 </body>
 </html>
