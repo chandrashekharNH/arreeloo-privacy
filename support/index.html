@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ARreeloo Support</title>
+<meta name="description" content="Help with the ARreeloo app: contact, purchases, captions and saving videos.">
+<meta name="theme-color" content="#0A0A12">
+<meta name="color-scheme" content="dark">
+<link rel="icon" type="image/png" href="../icon.png">
+<link rel="apple-touch-icon" href="../icon.png">
+<style>
+  /* The same colours, radii and spacing as the app's AppColors,
+     AppRadius and AppSpacing. The app is always dark, so this is too. */
+  :root {
+    --background: #0A0A12;
+    --violet: #7C5CFF;
+    --pink: #FF3D8B;
+    --cyan: #2EE6D6;
+    --text: #FFFFFF;
+    --text-secondary: rgba(255, 255, 255, 0.78);
+    --text-muted: rgba(255, 255, 255, 0.55);
+    --glass: rgba(0, 0, 0, 0.35);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --brand: linear-gradient(135deg, var(--violet), var(--pink));
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { background: var(--background); }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--text-secondary);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* The app's MagicBackground: aurora light in the brand colours over
+     deep night, with sparkles drawn on the canvas above it. */
+  .aurora, #sparkles {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .aurora { overflow: hidden; opacity: 0.8; }
+
+  .aurora i {
+    position: absolute;
+    width: 120vmax;
+    height: 120vmax;
+    margin: -60vmax 0 0 -60vmax;
+    border-radius: 50%;
+    animation: drift 24s ease-in-out infinite alternate;
+  }
+
+  .aurora i:nth-child(1) {
+    left: 15%; top: 18%;
+    background: radial-gradient(closest-side, rgba(124, 92, 255, 0.42), rgba(124, 92, 255, 0));
+  }
+  .aurora i:nth-child(2) {
+    left: 90%; top: 42%;
+    background: radial-gradient(closest-side, rgba(255, 61, 139, 0.36), rgba(255, 61, 139, 0));
+    animation-direction: alternate-reverse;
+  }
+  .aurora i:nth-child(3) {
+    left: 30%; top: 90%;
+    background: radial-gradient(closest-side, rgba(46, 230, 214, 0.3), rgba(46, 230, 214, 0));
+    animation-duration: 16s;
+  }
+
+  @keyframes drift {
+    from { transform: translate(-6vw, -4vh); }
+    to   { transform: translate(6vw, 4vh); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aurora i { animation: none; }
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 56px max(16px, env(safe-area-inset-right)) 72px max(16px, env(safe-area-inset-left));
+  }
+
+  header { text-align: center; margin-bottom: 32px; }
+
+  .icon {
+    width: 96px;
+    height: 96px;
+    border-radius: 22px;
+    box-shadow: 0 12px 40px rgba(255, 61, 139, 0.35), 0 4px 18px rgba(124, 92, 255, 0.35);
+  }
+
+  .app {
+    margin: 16px 0 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 6px 0 8px;
+    font-size: clamp(2rem, 7vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.4px;
+    text-wrap: balance;
+  }
+
+  /* Headline in the brand gradient, as on the onboarding screens. */
+  .gradient {
+    background: var(--brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 22px rgba(124, 92, 255, 0.45));
+  }
+
+  .date { margin: 0; color: var(--text-muted); font-size: 14px; font-weight: 600; }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin: 24px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* PillChip */
+  .chips li {
+    padding: 7px 14px;
+    border: 1px solid var(--glass-border);
+    border-radius: 999px;
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  /* GlassContainer */
+  section {
+    margin-top: 16px;
+    padding: 24px;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+  }
+
+  section.lead {
+    border-color: transparent;
+    background:
+      linear-gradient(rgba(16, 14, 28, 0.82), rgba(16, 14, 28, 0.82)) padding-box,
+      var(--brand) border-box;
+    box-shadow: 0 8px 32px rgba(255, 61, 139, 0.18);
+  }
+
+  section.lead p { color: var(--text); font-size: 17px; }
+
+  h2 {
+    margin: 0 0 8px;
+    color: var(--text);
+    font-size: 1.2rem;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -0.3px;
+  }
+
+  p { margin: 0 0 12px; }
+  section > :last-child { margin-bottom: 0; }
+
+  strong { color: var(--text); font-weight: 700; }
+
+  a {
+    color: var(--cyan);
+    font-weight: 700;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 4px; }
+
+  ul.plain { margin: 0 0 12px; padding-left: 20px; }
+  ul.plain li { margin-bottom: 4px; }
+  ul.plain li::marker { color: var(--pink); }
+
+  /* What the app uses: a gradient badge per permission, like the
+     highlighted RailButton. */
+  .uses { margin: 16px 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+
+  .uses li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .badge {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--brand);
+  }
+
+  .badge svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: #fff;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .uses b { display: block; color: var(--text); font-weight: 800; }
+
+  /* GradientButton */
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 54px;
+    margin-top: 4px;
+    padding: 0 28px;
+    border-radius: 999px;
+    background: var(--brand);
+    box-shadow: 0 8px 24px rgba(255, 61, 139, 0.4);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.1px;
+    text-decoration: none;
+  }
+  .button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 999px; }
+
+  footer {
+    margin-top: 40px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    main { padding-top: 40px; }
+    section { padding: 20px 18px; }
+    .button { display: flex; }
+  }
+
+  /* Questions that open on tap. */
+  details { border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 14px 0; }
+  details:first-of-type { border-top: 0; padding-top: 4px; }
+  details:last-of-type { padding-bottom: 0; }
+  summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--text);
+    font-weight: 800;
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--pink); font-size: 1.3em; line-height: 1; }
+  details[open] summary::after { content: "\2212"; }
+  summary:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 4px; }
+  details > :not(summary) { margin-top: 10px; }
+  ol.steps { margin: 10px 0 0; padding-left: 22px; }
+  ol.steps li { margin-bottom: 4px; }
+  ol.steps li::marker { color: var(--pink); font-weight: 800; }
+  .center { text-align: center; }
+</style>
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<canvas id="sparkles" aria-hidden="true"></canvas>
+
+<main>
+  <header>
+    <img class="icon" src="../icon.png" alt="ARreeloo app icon" width="96" height="96">
+    <p class="app">ARreeloo</p>
+    <h1><span class="gradient">Support</span></h1>
+    <p class="date">We are happy to help</p>
+  </header>
+
+  <section class="lead center">
+    <p><strong>Need help, found a problem or have an idea?</strong> Email us and we will reply, usually within two days.</p>
+    <p><a class="button" href="mailto:chandrashekhar.hodlur@gmail.com?subject=ARreeloo%20help">Email us</a></p>
+    <p style="margin-top:12px"><a href="mailto:chandrashekhar.hodlur@gmail.com?subject=ARreeloo%20help">chandrashekhar.hodlur@gmail.com</a></p>
+  </section>
+
+  <section>
+    <h2>Common questions</h2>
+
+    <details>
+      <summary>How do I remove the watermark?</summary>
+      <ol class="steps">
+        <li>Open a finished video and tap <strong>Save</strong> or <strong>Share</strong>.</li>
+        <li>Tap <strong>Remove watermark</strong> and pay once. It is not a subscription.</li>
+        <li>From then on, every video is saved without the ARreeloo mark and closing card.</li>
+      </ol>
+    </details>
+
+    <details>
+      <summary>I bought it before. How do I get it back on a new phone?</summary>
+      <p>Sign in with the same Apple Account, open the menu in ARreeloo and tap <strong>Restore purchase</strong>. You will not be charged again.</p>
+    </details>
+
+    <details>
+      <summary>Why are captions offered in only some languages?</summary>
+      <p>Captions are written by your phone's own speech recognition, and the list shows only the languages it supports. Pick the language you will speak under <strong>Caption language</strong>. Some languages work without the internet; others need it.</p>
+    </details>
+
+    <details>
+      <summary>My captions came out wrong. What can I do?</summary>
+      <p>Speak clearly and close to the phone, and check the caption language matches the one you spoke. You can fix any word with <strong>Edit captions</strong>.</p>
+    </details>
+
+    <details>
+      <summary>Where are my videos saved?</summary>
+      <p>Every video you make is kept in <strong>My videos</strong> inside the app, on your phone. Tap <strong>Save</strong> to put a copy in your Photos library. Nothing is uploaded anywhere.</p>
+    </details>
+
+    <details>
+      <summary>The app can't use my camera, microphone or photos.</summary>
+      <p>Open the <strong>Settings</strong> app, scroll to <strong>ARreeloo</strong> and turn on Camera, Microphone, Photos or Speech Recognition.</p>
+    </details>
+
+    <details>
+      <summary>How do I learn all the features?</summary>
+      <p>Open the menu in ARreeloo and tap <strong>How to use</strong>. Every feature is explained step by step, and you can see the welcome tour again.</p>
+    </details>
+  </section>
+
+  <section>
+    <h2>Reporting a problem</h2>
+    <p>It helps us fix it faster if your email says:</p>
+    <ul class="plain">
+      <li>your iPhone or iPad model and iOS version</li>
+      <li>the ARreeloo version, shown at the bottom of the menu</li>
+      <li>what you did, and what happened</li>
+      <li>a screenshot or screen recording, if you can</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Privacy</h2>
+    <p>ARreeloo does its work on your device and collects nothing. Read the full <a href="../">Privacy Policy</a>.</p>
+  </section>
+
+  <footer>© 2026 Chandrashekhar N H</footer>
+</main>
+
+<script>
+  // The sparkles from the app's MagicBackground: fixed positions, each
+  // twinkling on its own phase. Reduced-motion readers get a still frame.
+  (function () {
+    var canvas = document.getElementById('sparkles');
+    var context = canvas.getContext('2d');
+    var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var loop = 24000;
+    var width = 0;
+    var height = 0;
+
+    function random(index, channel) {
+      var value = Math.sin(index * 12.9898 + channel * 78.233) * 43758.5453;
+      return value - Math.floor(value);
+    }
+
+    function resize() {
+      var scale = window.devicePixelRatio || 1;
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * scale;
+      canvas.height = height * scale;
+      context.setTransform(scale, 0, 0, scale, 0, 0);
+    }
+
+    function paint(now) {
+      var angle = ((now % loop) / loop) * 2 * Math.PI;
+
+      context.clearRect(0, 0, width, height);
+
+      for (var index = 0; index < 46; index++) {
+        var x = random(index, 1) * width;
+        var y = random(index, 2) * height;
+        var phase = random(index, 3) * 2 * Math.PI;
+        var twinkle = 0.5 + 0.5 * Math.sin(angle * 6 + phase);
+        var radius = 0.6 + 1.6 * random(index, 4) * twinkle;
+
+        context.fillStyle = 'rgba(255,255,255,' + (0.1 + 0.45 * twinkle) + ')';
+        context.beginPath();
+        context.arc(x, y, radius, 0, 2 * Math.PI);
+        context.fill();
+
+        // The brightest few get a soft cross-shaped glint.
+        if (index % 9 === 0 && twinkle > 0.75) {
+          var length = 5 * twinkle;
+          context.strokeStyle = 'rgba(255,255,255,' + 0.4 * twinkle + ')';
+          context.lineWidth = 1;
+          context.lineCap = 'round';
+          context.beginPath();
+          context.moveTo(x - length, y);
+          context.lineTo(x + length, y);
+          context.moveTo(x, y - length);
+          context.lineTo(x, y + length);
+          context.stroke();
+        }
+      }
+
+      if (!still) {
+        requestAnimationFrame(paint);
+      }
+    }
+
+    window.addEventListener('resize', function () {
+      resize();
+      if (still) {
+        paint(0);
+      }
+    });
+
+    resize();
+    paint(0);
+  })();
+</script>
+</body>
+</html>
+
